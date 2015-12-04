@@ -9,15 +9,20 @@ module Sandbox
       @snippet = snippet
       @spec = spec
       @gems = gems
+      [snippet, spec].map(&:path).each { |f| File.chmod(0644, f) }
     end
 
     def create_docker_container
+      Rails.logger.info "snippet_path: #{@snippet.path}"
+      Rails.logger.info "spec_path: #{@spec.path}"
       @container = Docker::Container.create(
           "Image" => "rspec-nonroot",
+          "Memory" => 16.megabytes,
           "Volumes" => { "/app/snippet.rb" => {}, "/app/spec/snippet_spec.rb" => {} },
-          "Binds" => [ "#{@snippet.path}:/app/snippet.rb", "#{@spec.path}:/app/spec/snippet_spec.rb"]
+          "Binds" => [ "#{@snippet.path}:/app/snippet.rb", "#{@spec.path}:/app/spec/snippet_spec.rb"],
       )
       @name = @container.json['Name'][1..-1]
+
       Rails.logger.info "Name: #{@name}"
     end
 

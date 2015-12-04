@@ -1,22 +1,24 @@
 class SnippetsController < ApplicationController
   def create
-    code = params[:code]
-    spec = params[:spec]
-    gems = ['activesupport']
+    snippet = Snippet.create!(snippet_params)
 
     renderer = ERB.new(File.read('lib/templates/spec.rb.erb'))
-    output = renderer.result(binding)
+    output = renderer.result(snippet.instance_eval { binding })
 
     c = Sandbox::Container.new(
-        snippet: Tempfile.open('snippet.rb') { |f| f << code },
+        snippet: Tempfile.open('snippet.rb') { |f| f << snippet.code },
         spec: Tempfile.open('spec.rb') { |f| f << output },
-        gems: gems
     )
+
     c.create_docker_container
     # c.prepare
     out = c.run
 
     render json: {output: out}
 
+  end
+
+  def snippet_params
+    params.require(:snippet).permit(:code, :spec)
   end
 end
