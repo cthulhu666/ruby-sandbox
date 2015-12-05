@@ -18,8 +18,10 @@ module Sandbox
       @container = Docker::Container.create(
           "Image" => "rspec-nonroot",
           "Memory" => 16.megabytes,
-          "Volumes" => { "/app/snippet.rb" => {}, "/app/spec/snippet_spec.rb" => {} },
-          "Binds" => [ "#{@snippet.path}:/app/snippet.rb", "#{@spec.path}:/app/spec/snippet_spec.rb"],
+          "CpuQuota" => 50000,
+          "ReadonlyRootfs" => true,
+          "Volumes" => {"/app/snippet.rb" => {}, "/app/spec/snippet_spec.rb" => {}},
+          "Binds" => ["#{@snippet.path}:/app/snippet.rb", "#{@spec.path}:/app/spec/snippet_spec.rb"],
       )
       @name = @container.json['Name'][1..-1]
 
@@ -35,10 +37,11 @@ module Sandbox
     def run
       out = ''
       @container.tap(&:start).attach do |stream, chunk|
-        puts "#{stream}: #{chunk}"
         out << chunk
       end
       out
+    ensure
+      @container.delete(force: true)
     end
 
   end

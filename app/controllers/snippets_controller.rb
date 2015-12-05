@@ -1,24 +1,51 @@
 class SnippetsController < ApplicationController
+
+  #def new
+  #  render json: {uid: SecureRandom.urlsafe_base64}, status: :ok
+  #end
+
+  def show
+    if snippet
+      render :show
+    else
+      head :not_found
+    end
+  end
+
   def create
-    snippet = Snippet.create!(snippet_params)
+    @snippet = Snippet.create!(snippet_params)
+    render :show, status: :created
+    #render json: {snippet: snippet.as_json}, status: :created
+  end
 
-    renderer = ERB.new(File.read('lib/templates/spec.rb.erb'))
-    output = renderer.result(snippet.instance_eval { binding })
+  def update
+    return head :bad_request if snippet.is_frozen
+    snippet.update_attributes!(snippet_params)
+    render :show
+  end
 
-    c = Sandbox::Container.new(
-        snippet: Tempfile.open('snippet.rb') { |f| f << snippet.code },
-        spec: Tempfile.open('spec.rb') { |f| f << output },
-    )
+  def freeze
+    if snippet.is_frozen
+      head :bad_request
+    else
+      snippet.freeze_snippet
+      head :ok
+    end
+  end
 
-    c.create_docker_container
-    # c.prepare
-    out = c.run
-
-    render json: {output: out}
-
+  def fork
+    @snippet = snippet.fork
+    render :show
   end
 
   def snippet_params
-    params.require(:snippet).permit(:code, :spec)
+    params.require(:snippet).permit(:code, :spec, :uid)
   end
+  private :snippet_params
+
+  def snippet
+    @snippet ||= Snippet.where(id: params[:id]).first
+  end
+  private :snippet
+
 end
