@@ -13,7 +13,7 @@ class ExecutionsController < ApplicationController
     c.create_docker_container
     # c.prepare
 
-    Timeout::timeout(1.seconds) do
+    Timeout::timeout(timeout) do
       out = c.run
       render json: {output: out}
     end
@@ -24,5 +24,10 @@ class ExecutionsController < ApplicationController
     params.require(:snippet).permit(:code, :spec)
   end
   private :snippet_params
+
+  def timeout
+    ENV.fetch('EXECUTION_TIMEOUT', 2).to_i.seconds
+  end
+  private :timeout
 
 end
