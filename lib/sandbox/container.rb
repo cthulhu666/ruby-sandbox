@@ -39,7 +39,7 @@ module Sandbox
       @container.tap(&:start).attach do |stream, chunk|
         out << chunk
       end
-      out
+      out.force_encoding('UTF-8')
     ensure
       @container.delete(force: true)
     end
