@@ -1,0 +1,15 @@
+FROM ruby:2.2.3-slim
+
+RUN apt-get update && apt-get install -y git-core build-essential
+RUN gem install foreman --no-ri
+
+ADD Gemfile /app/
+ADD Gemfile.lock /app/
+ADD vendor/cache /app/vendor/cache
+WORKDIR /app
+RUN bundle install --local --without development test --deployment --quiet
+
+ADD . /app
+RUN rm -rf /app/vendor/cache
+ENV RAILS_ENV production
+

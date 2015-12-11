@@ -28,3 +28,6 @@ end
 
 gem 'docker-api'
 gem 'mongoid', '~> 5.0.0'
+
+gem 'unicorn', group: :production
+

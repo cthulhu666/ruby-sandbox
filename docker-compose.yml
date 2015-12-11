@@ -9,7 +9,7 @@ app:
   ports:
     - "3000"
   environment:
-    - MONGODB_HOST=dockersandbox_mongodb_1:27017
+    - MONGODB_HOST=${APP_NAME}_mongodb_1:27017
 
 ui:
   build: ../sandbox-ui
@@ -21,7 +21,7 @@ ui:
     - "3000:3000"
     - "3001:3001"
   environment:
-    - API_URL=http://dockersandbox_app_1:3000
+    - API_URL=http://${APP_NAME}_app_1:3000
   volumes:
      - "../sandbox-ui:/src"
 
