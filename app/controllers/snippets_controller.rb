@@ -15,7 +15,6 @@ class SnippetsController < ApplicationController
   def create
     @snippet = Snippet.create!(snippet_params)
     render :show, status: :created
-    #render json: {snippet: snippet.as_json}, status: :created
   end
 
   def update
