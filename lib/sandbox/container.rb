@@ -41,6 +41,7 @@ module Sandbox
       out.force_encoding('UTF-8')
     ensure
       @container.delete(force: true)
+      [@snippet, @spec].each { |f| File.delete(f.path) }
     end
 
     def image_name
