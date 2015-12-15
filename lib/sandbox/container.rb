@@ -16,7 +16,7 @@ module Sandbox
       Rails.logger.info "snippet_path: #{@snippet.path}"
       Rails.logger.info "spec_path: #{@spec.path}"
       @container = Docker::Container.create(
-          "Image" => "rspec-nonroot",
+          "Image" => image_name,
           "Memory" => 16.megabytes,
           "CpuQuota" => 50000,
           "ReadonlyRootfs" => true,
@@ -42,6 +42,10 @@ module Sandbox
       out.force_encoding('UTF-8')
     ensure
       @container.delete(force: true)
+    end
+
+    def image_name
+      ENV.fetch('IMAGE_NAME', 'rspec-nonroot')
     end
 
   end
