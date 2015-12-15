@@ -19,5 +19,4 @@ class Snippet
   def freeze_snippet
     update_attribute(:is_frozen, true)
   end
-
 end

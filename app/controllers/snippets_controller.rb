@@ -1,8 +1,7 @@
 class SnippetsController < ApplicationController
-
-  #def new
+  # def new
   #  render json: {uid: SecureRandom.urlsafe_base64}, status: :ok
-  #end
+  # end
 
   def show
     if snippet
@@ -46,5 +45,4 @@ class SnippetsController < ApplicationController
     @snippet ||= Snippet.where(id: params[:id]).first
   end
   private :snippet
-
 end

@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -30,4 +29,3 @@ gem 'docker-api'
 gem 'mongoid', '~> 5.0.0'
 
 gem 'unicorn', group: :production
-
