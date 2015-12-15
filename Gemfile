@@ -23,7 +23,7 @@ group :development, :test do
 end
 
 group :development do
-
+  gem 'rubocop', require: false
 end
 
 gem 'docker-api'
