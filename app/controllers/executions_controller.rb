@@ -13,7 +13,7 @@ class ExecutionsController < ApplicationController
 
     Timeout.timeout(timeout) do
       out = c.run
-      render json: { output: out }
+      render json: { output: out, status: status(out)}
     end
   end
 
@@ -26,4 +26,19 @@ class ExecutionsController < ApplicationController
     ENV.fetch('EXECUTION_TIMEOUT', 2).to_i.seconds
   end
   private :timeout
+
+  def status(output)
+    case output
+      when /Failed examples/
+        :fail
+      when /(\d{1,}) example.?, (\d{1,}) failure.?, (\d{1,}) pending/
+        :pending
+      when /(\d{1,}) example.?, (\d{1,}) failure.?/
+        $2 == '0' ? :pass : :fail
+      else
+        :fail
+    end
+  end
+  private :status
+
 end
