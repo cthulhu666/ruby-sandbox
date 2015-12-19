@@ -16,7 +16,7 @@ class Snippet
     Snippet.create(parent: self, code: code, spec: spec, uid: uid)
   end
 
-  def freeze_snippet
-    update_attribute(:is_frozen, true)
+  def freeze_snippet(params)
+    update_attributes(params.merge(is_frozen: true))
   end
 end

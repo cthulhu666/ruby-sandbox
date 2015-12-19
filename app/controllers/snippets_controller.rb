@@ -26,7 +26,7 @@ class SnippetsController < ApplicationController
     if snippet.is_frozen
       head :bad_request
     else
-      snippet.freeze_snippet
+      snippet.freeze_snippet(snippet_params)
       head :ok
     end
   end
