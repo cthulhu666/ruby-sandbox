@@ -13,7 +13,7 @@ class ExecutionsController < ApplicationController
 
     Timeout.timeout(timeout) do
       out = c.run
-      render json: { output: out, status: status(out)}
+      render json: { output: out, status: status(out) }
     end
   end
 
@@ -29,16 +29,15 @@ class ExecutionsController < ApplicationController
 
   def status(output)
     case output
-      when /Failed examples/
-        :fail
-      when /(\d{1,}) example.?, (\d{1,}) failure.?, (\d{1,}) pending/
-        :pending
-      when /(\d{1,}) example.?, (\d{1,}) failure.?/
-        $2 == '0' ? :pass : :fail
-      else
-        :fail
+    when /Failed examples/
+      :fail
+    when /(\d{1,}) example.?, (\d{1,}) failure.?, (\d{1,}) pending/
+      :pending
+    when /(\d{1,}) example.?, (\d{1,}) failure.?/
+      Regexp.last_match(2) == '0' ? :pass : :fail
+    else
+      :fail
     end
   end
   private :status
-
 end
