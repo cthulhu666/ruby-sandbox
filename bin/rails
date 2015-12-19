@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-ENV['MONGODB_HOST'] ||= "localhost:#{`docker port dockersandbox_mongodb_1 27017/tcp | grep -Eo '([0-9]{5})$'`}".strip
+ENV['MONGODB_HOST'] ||= "localhost:#{`docker port sandbox_mongodb_1 27017/tcp | grep -Eo '([0-9]{5})$'`}".strip
 begin
   load File.expand_path('../spring', __FILE__)
 rescue LoadError => e
