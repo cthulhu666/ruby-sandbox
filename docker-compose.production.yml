@@ -1,29 +1,32 @@
-app:
-  build: .
-  dockerfile: Dockerfile.production
-  command: ["foreman", "start" , "-f", "Procfile.production"]
-  volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
-    - /tmp:/tmp
-  ports:
-    - "${API_PUBLIC_PORT}:3000"
-  environment:
-    - MONGODB_HOST=${APP_NAME}_mongodb_1:27017
-    - PORT=3000
-    - RAILS_ENV=production
-    - EXECUTION_TIMEOUT=5
-    - SECRET_KEY_BASE=4adc44c61069118de46a348d0d62fa4dede92806a2fec529f0eebc867275bb7528f66c6f2a9789d7128e6b62ed881118ed0947fb88ed94193c07009ea30c73ce
+version: '2'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    command: ["foreman", "start" , "-f", "Procfile.production"]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp:/tmp
+    ports:
+      - "${API_PUBLIC_PORT}:3000"
+    environment:
+      - MONGODB_HOST=mongodb
+      - PORT=3000
+      - RAILS_ENV=production
+      - EXECUTION_TIMEOUT=5
+      - SECRET_KEY_BASE=4adc44c61069118de46a348d0d62fa4dede92806a2fec529f0eebc867275bb7528f66c6f2a9789d7128e6b62ed881118ed0947fb88ed94193c07009ea30c73ce
 
-mongodb:
-  image: mongo:3.2
-  command: mongod --smallfiles
-  volumes:
-    - ./db/mongodb:/data/db
-  ports:
-    - "27017"
+  mongodb:
+    image: mongo:3.2
+    command: mongod --smallfiles
+    volumes:
+      - ./db/mongodb:/data/db
+    ports:
+      - "27017"
 
-ui:
-  image: cthulhu666/sandbox-ui:latest
-  ports:
-    - "${UI_PUBLIC_PORT}:80"
+  ui:
+    image: cthulhu666/sandbox-ui:latest
+    ports:
+      - "${UI_PUBLIC_PORT}:80"
 
